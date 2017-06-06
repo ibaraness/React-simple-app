@@ -1,0 +1,22 @@
+.review-star {
+    font-size: 18px;
+    color: #ffb500;
+}
+.review-star-big.review-star {
+    font-size: 28px;
+}
+.glyphicon-star-half {
+    position: relative;
+}
+.glyphicon-star-half:after {
+    content: '\e006';
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width: 47%;
+    display: inline-block;
+    overflow: hidden;
+}
+.glyphicon-star-half:before {
+    content: "\e007";
+}

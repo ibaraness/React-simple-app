@@ -1,0 +1,44 @@
+/* General styles */
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css?family=Advent+Pro|Magra:400,700');
+
+html {
+    min-height: 100%;
+    position: relative;
+}
+body {
+    color: #666666;
+    font-family: 'Advent Pro', Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    padding-top: 90px;
+    margin-bottom:110px;
+}
+figure {
+    margin:0;
+}
+h1 {
+    font-size:36px;
+    font-family: Magra;
+    font-weight: 700;
+    color: #204190;
+    margin-top:0;
+}
+h2 {
+    font-size: 30px;
+
+}
+h3 {
+    font-size: 25px;
+}
+@media(min-width:768px){
+    body {
+        margin-bottom:260px;
+    }
+}
+@media(min-width:992px){
+
+}
+@media(min-width:1200px){
+
+}

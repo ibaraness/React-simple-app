@@ -1,0 +1,21 @@
+.image-loader {
+    width: 100%;
+    height: 350px;
+    background-color:#999;
+}
+
+@media(min-width:768px){
+    .image-loader {
+        height:300px;
+    }
+}
+@media(min-width:992px){
+    .image-loader {
+        height:350px;
+    }
+}
+@media(min-width:1200px){
+    .image-loader {
+        height:400px;
+    }
+}
