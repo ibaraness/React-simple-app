@@ -1,17 +1,15 @@
 
 import { connect } from 'react-redux';
 import { 
-    fetchStory, 
-    fetchStorySuccess, 
     fetchMainStories, 
     fetchMainStoriesSuccess,
     fetchOtherStories,
-    fetchOtherStoriesSuccess 
+    fetchOtherStoriesSuccess, 
 } from './../../actions/story';
+import { show_spinner, hide_spinner } from './../../actions/spinner';
 import { fetch_homepage_products,fetch_homepage_products_success } from './../../actions/product'
 import { fetch_teaser, fetch_teaser_success } from './../../actions/teaser';
 import Homepage from './../../components/pages/Homepage';
-import { promiseInterceptor } from './../../utils/promise-interceptor';
 
 /**
  * Prepare all homepage data before showing the page
@@ -38,46 +36,24 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
     return {
-        getStory: id => {
-            /**
-             * Wrapping our Promise action with our promiseInterceptor function allow
-             * us to show and hide a loader
-             */
-            promiseInterceptor(dispatch, fetchStory(id))
-            /**
-             * Our current action's payload is a Promise, which also returns a promise (then() chaining)
-             * Which allow us to use 'then()' method again (...and again if we like) 
-             */
-            .then((response)=>{
-                /**
-                 * Dispatch the fetch success when promise resolved 
-                 */
-                dispatch(fetchStorySuccess(id, response.payload));
-            });
-        },
-        getMainStories: () => {
-            promiseInterceptor(dispatch, fetchMainStories())
-            .then(response => {
-                dispatch(fetchMainStoriesSuccess(response.payload));
-            })
-        },
-        getHomepageProducts: () => {
-            promiseInterceptor(dispatch, fetch_homepage_products())
-            .then(response => {
-                dispatch(fetch_homepage_products_success(response.payload));
-            })
-        },
-        getTeaser: () => {
-            promiseInterceptor(dispatch, fetch_teaser())
-            .then(response => {
-                dispatch(fetch_teaser_success(response.payload));
-            })
-        },
-        getOtherStories: () => {
-            promiseInterceptor(dispatch, fetchOtherStories())
-            .then(response => {
-                dispatch(fetchOtherStoriesSuccess(response.payload));
-            })
+        /**
+         * Load all homepage data together using Promise.all method
+         */
+        getHomepageData: () => {
+            dispatch(show_spinner());
+            Promise.all([
+                dispatch(fetchMainStories()),
+                dispatch(fetch_homepage_products()),
+                dispatch(fetch_teaser()),
+                dispatch(fetchOtherStories())
+                ]).then(response => {
+                    //TODO: Catch errors
+                    dispatch(hide_spinner());
+                    dispatch(fetchMainStoriesSuccess(response[0].payload));
+                    dispatch(fetch_homepage_products_success(response[1].payload));
+                    dispatch(fetch_teaser_success(response[2].payload));
+                    dispatch(fetchOtherStoriesSuccess(response[3].payload));
+                });
         }
     }
 }

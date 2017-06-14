@@ -7,10 +7,12 @@ import OtherStories from './OtherStories';
 export default class Homepage extends Component {
 
   componentWillMount(){
-    this.props.getMainStories();
-    this.props.getHomepageProducts();
-    this.props.getTeaser();
-    this.props.getOtherStories();
+    // this.props.getMainStories();
+    // this.props.getHomepageProducts();
+    // this.props.getTeaser();
+    // this.props.getOtherStories();
+
+    this.props.getHomepageData()
   }
 
   render(){

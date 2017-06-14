@@ -4,7 +4,6 @@ import './main-stories.css';
 
 class MainStories extends Component {
   render(){
-
     let stories;
     if(this.props.mainStories && !!this.props.mainStories.length){
        stories = this.props.mainStories.map((story) => {
