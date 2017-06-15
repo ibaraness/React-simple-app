@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import Story from './../../../shared/segments/Story';
 import './main-stories.css';
+import Maybe from './../../../../utils/fp/Maybe'
+import R from 'ramda';
 
 class MainStories extends Component {
+
   render(){
-    let stories;
+    let stories = [];
     if(this.props.mainStories && !!this.props.mainStories.length){
-       stories = this.props.mainStories.map((story) => {
-         const key = "mainStory-" + story.id;
-         return (<div key={key} className="col-sm-4 "><Story story={story} /></div>)
+       stories = this.props.mainStories.map((storyId) => {
+          const key = "mainStory-" + storyId;
+          const storyData = this.props.stories.find(s => +s.id === +storyId) || {};
+          return (<div key={key} className="col-sm-4 "><Story story={storyData} /></div>)
        })
     }
-
+    
     return(
       <section>
       {/* MAIN THREE STORIES START */}

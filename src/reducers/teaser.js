@@ -6,10 +6,10 @@ import {
     return action.payload;
  }
 
- export const teaser = (state = {}, action) => {
+ export const teaser = (state = [], action) => {
      switch(action.type){
         case FETCH_TEASER_SUCCESS:
-            return fetch_teaser_success(state, action);
+            return [ ...state, ...action.payload];
         default:
             return state;
      }

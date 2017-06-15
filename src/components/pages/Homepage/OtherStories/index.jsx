@@ -6,9 +6,10 @@ export default class OtherStories extends Component{
     render(){
         let stories;
         if(this.props.otherStories && !!this.props.otherStories.length){
-            stories = this.props.otherStories.map((story) => {
-                const key = "otherStory-" + story.id;
-                return (<div key={key} className="col-sm-2 small-thumb"><Story story={story} /></div>)
+            stories = this.props.otherStories.map((storyId) => {
+                const key = "mainStory-" + storyId;
+                 const storyData = this.props.stories.find(s => +s.id === +storyId) || {};
+                return (<div key={key} className="col-sm-2 small-thumb"><Story story={storyData} /></div>)
             });
         }
 

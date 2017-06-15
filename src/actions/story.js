@@ -12,6 +12,8 @@ import {
     FETCH_RELATED_STORIES,
     FETCH_RELATED_STORIES_SUCCESS,
  } from './action-types'
+import Maybe from './../utils/fp/Maybe'
+import R from 'ramda';
 
 /**
  * Test async loading with promise
@@ -25,6 +27,11 @@ function loadStory(id){
     });
 }
 
+/**
+ * 
+ * @param {*} mainStoryId 
+ * @param {*} maxStories 
+ */
 function loadRelatedStories(mainStoryId, maxStories){
     return new Promise((resolve, reject) => {
         setTimeout(function(){
@@ -40,10 +47,11 @@ function loadRelatedStories(mainStoryId, maxStories){
     });
 }
 
+
 function loadMainStories(){
     return new Promise((resolve, reject) => {
         setTimeout(function(){
-            resolve(STORIES.slice(0,3));
+            resolve(STORIES.slice(0,3).map(s => s.id));
         }, 1000);
     });
 }
@@ -51,10 +59,14 @@ function loadMainStories(){
 function loadOtherStories(){
     return new Promise((resolve, reject) => {
         setTimeout(function(){
-            resolve(STORIES.slice(3));
+            resolve(STORIES.slice(3).map(s => s.id));
         }, 1000);      
     })
 }
+
+/**
+ * STORY ACTION CREATORS
+ */
 
 export const fetchStory = (id) => {
     return {
@@ -77,6 +89,10 @@ export const fetchStoryFailed = (id, error) => {
     }
 }
 
+/**
+ * RELATED STORIES ACTION CREATORS
+ */
+
 export const fetchRelatedStories = (id, max) => {
     return {
         type: FETCH_RELATED_STORIES,
@@ -90,6 +106,11 @@ export const fetchRelatedStoriesSuccess = (data) => {
         payload: data
     }
 }
+
+/**
+ * MAIN HOMEPAGE STORIES ACTION CREATORS
+ */
+
 
 export const fetchMainStories = () =>{
     return {
@@ -112,6 +133,19 @@ export const fetchMainStoriesFailure = (error) =>{
     }
 }
 
+/**
+ * Function action to load stories (Thunk middleware)
+ */
+export const prefetchMainStoriesSuccess = (mainStoriesIds) => { 
+    return (dispatch, getState) => {
+        console.log("state", getState());
+        loadStoriesData(fetchMainStoriesSuccess, dispatch, mainStoriesIds)
+    }
+}
+
+/**
+ * OTHER STORIES ACTION CREATORS
+ */
 export const fetchOtherStories = () => {
     return {
         type: FETCH_OTHER_STORIES,
@@ -132,3 +166,28 @@ export const fetchOtherStoriesFailure = (error) => {
         payload: error
     }
 }
+
+export const prefetchOtherStoriesSuccess = (data) => {
+    return (dispatch, getState) => {
+        console.log("state", getState());
+        loadStoriesData(fetchOtherStoriesSuccess, dispatch, data, getState)
+    }
+}
+
+/**
+ * Helper partial application function that loads the main stories
+ * We are looping through main stories id's, and load each story
+ * 
+ * @param {*} loadStoryAction - the action creator for loading a single story (returns a promise)
+ * @param {*} loadStoryActionSuccess - The action creator for success loading of a single story
+ * @param {*} fetchReferenceActionSuccess - The action creator for success loading of main stories (fires last)
+ */
+export const loadStoriesData = R.partial((loadStoryAction,loadStoryActionSuccess, fetchReferenceActionSuccess, dispatch, mainStoriesIds) => {
+    mainStoriesIds.forEach(storyId => {
+        dispatch(loadStoryAction(storyId)).then(res => {
+            //console.log("storyId", storyId);
+            dispatch(loadStoryActionSuccess(storyId, res.payload));
+        });
+    });
+    dispatch(fetchReferenceActionSuccess(mainStoriesIds));
+},[fetchStory, fetchStorySuccess]);
