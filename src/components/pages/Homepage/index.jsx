@@ -3,6 +3,7 @@ import MainStories from './MainStories2';
 import HomepageProducts from './HomepageProducts';
 import Teaser from './../../shared/segments/Teaser';
 import OtherStories from './OtherStories';
+import GeneralModal from './../../shared/GeneralModal'
 import Maybe from './../../../utils/fp/Maybe'
 import R from 'ramda';
 
@@ -44,7 +45,6 @@ export default class Homepage extends Component {
 
     return(
         <div className="container">
-
           {/* MAIN THREE STORIES START */}
           <MainStories stories={this.props.stories} mainStories ={this.props.mainStories} />
           {/* MAIN THREE STORIES END */}

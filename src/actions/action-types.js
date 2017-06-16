@@ -2,6 +2,7 @@
  * Single story fetching action types
  */
 export const FETCH_STORY = 'FETCH_STORY';
+export const FETCH_STORY_REQUEST = 'FETCH_STORY_REQUEST';
 export const FETCH_STORY_SUCCESS = 'FETCH_STORY_SUCCESS';
 export const FETCH_STORY_FAILURE = 'FETCH_STORY_FAILURE';
 

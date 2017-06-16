@@ -1,8 +1,9 @@
-import { STORIES } from './../data/fake_data';
+import {loadStory, loadRelatedStories, loadMainStories, loadOtherStories} from './../server-api';
 import { 
     FETCH_STORY, 
     FETCH_STORY_SUCCESS, 
     FETCH_STORY_FAILURE,
+    FETCH_STORY_REQUEST,
     FETCH_MAIN_STORIES,
     FETCH_MAIN_STORIES_SUCCESS,
     FETCH_MAIN_STORIES_FAILURE,
@@ -15,59 +16,16 @@ import {
 import Maybe from './../utils/fp/Maybe'
 import R from 'ramda';
 
-/**
- * Test async loading with promise
- */
-function loadStory(id){
-    return new Promise((resolve, reject) => {
-        setTimeout(function(){
-            const story = STORIES.find(s => +s.id === +id);
-            (story !== null && story !== undefined)?resolve(story):reject(story);
-        }, 1000);
-    });
-}
-
-/**
- * 
- * @param {*} mainStoryId 
- * @param {*} maxStories 
- */
-function loadRelatedStories(mainStoryId, maxStories){
-    return new Promise((resolve, reject) => {
-        setTimeout(function(){
-            /**
-             * Get relative stories
-             */
-            const stories = STORIES.filter(s => +s.id !== +mainStoryId)
-                .reduce((acc, v, i) =>{
-                    return i < maxStories ? acc.concat(v):acc;
-                },[]);
-            resolve(stories);
-        }, 1000);
-    });
-}
 
 
-function loadMainStories(){
-    return new Promise((resolve, reject) => {
-        setTimeout(function(){
-            resolve(STORIES.slice(0,3).map(s => s.id));
-        }, 1000);
-    });
-}
-
-function loadOtherStories(){
-    return new Promise((resolve, reject) => {
-        setTimeout(function(){
-            resolve(STORIES.slice(3).map(s => s.id));
-        }, 1000);      
-    })
-}
-
-/**
+/***************************************************
  * STORY ACTION CREATORS
- */
+ ***************************************************/
 
+/**
+ * Make an AJAX request to load a single story from the server
+ *  @param {number} id  - The story id
+ */
 export const fetchStory = (id) => {
     return {
         type: FETCH_STORY,
@@ -75,6 +33,43 @@ export const fetchStory = (id) => {
     }
 }
 
+/**
+ * Register the story request to the state (To avoid loading the same story)
+ * @param {number} id  - The story id
+ */
+export const fetchStoryRequest = (id) => {
+    return {
+        type: FETCH_STORY_REQUEST,
+        payload:id
+    }
+}
+
+/**
+ * Thunk action function to fetch a story from the server.
+ * The function checks if a story has already been loaded, or is currently being loaded, 
+ * if so, no farther request will be made. (That way we can prevent unnecessary requests to the server)
+ * @param {number} id  - The story id
+ */
+export const prefetchStory = (id) =>{
+    return (dispatch, getState) => {
+        const { stories } = getState();
+        const story = stories.find(s => +s.id === +id);
+        if(story){
+            if(!story.loading){
+                return Promise.resolve({})
+            }
+        }else {
+            dispatch(fetchStoryRequest(id));
+        }
+        return(dispatch(fetchStory(id)));
+    }
+}
+
+/**
+ * When a story finished loading successfully, the action creator is made to push it to state
+ * @param {number} id  - The story id
+ * @param {object} data - The actual story data (loaded from the server)
+ */
 export const fetchStorySuccess = (id, data) => {
     return {
         type: FETCH_STORY_SUCCESS,
@@ -82,6 +77,11 @@ export const fetchStorySuccess = (id, data) => {
     }
 }
 
+/**
+ * In case of a failure in a story request, an error action will be fired
+ * @param {number} id  - The story id
+ * @param {object} error - An object that represent the error that was found
+ */
 export const fetchStoryFailed = (id, error) => {
     return {
         type: FETCH_STORY_FAILURE,
@@ -89,9 +89,9 @@ export const fetchStoryFailed = (id, error) => {
     }
 }
 
-/**
+/***************************************************
  * RELATED STORIES ACTION CREATORS
- */
+ ***************************************************/
 
 export const fetchRelatedStories = (id, max) => {
     return {
@@ -107,10 +107,9 @@ export const fetchRelatedStoriesSuccess = (data) => {
     }
 }
 
-/**
+/***************************************************
  * MAIN HOMEPAGE STORIES ACTION CREATORS
- */
-
+ ***************************************************/
 
 export const fetchMainStories = () =>{
     return {
@@ -143,9 +142,10 @@ export const prefetchMainStoriesSuccess = (mainStoriesIds) => {
     }
 }
 
-/**
+/***************************************************
  * OTHER STORIES ACTION CREATORS
- */
+ ***************************************************/
+
 export const fetchOtherStories = () => {
     return {
         type: FETCH_OTHER_STORIES,
@@ -185,9 +185,9 @@ export const prefetchOtherStoriesSuccess = (data) => {
 export const loadStoriesData = R.partial((loadStoryAction,loadStoryActionSuccess, fetchReferenceActionSuccess, dispatch, mainStoriesIds) => {
     mainStoriesIds.forEach(storyId => {
         dispatch(loadStoryAction(storyId)).then(res => {
-            //console.log("storyId", storyId);
+            //TODO: Failure case handling
             dispatch(loadStoryActionSuccess(storyId, res.payload));
         });
     });
     dispatch(fetchReferenceActionSuccess(mainStoriesIds));
-},[fetchStory, fetchStorySuccess]);
+},[prefetchStory, fetchStorySuccess]);
