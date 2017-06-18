@@ -16,6 +16,10 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 const basicSiteState = {
     spinner: false,
     stories:[],
+    modals:{
+        show:false,
+        data:{}
+    }
 };
 
 // Middleware you want to use in production:

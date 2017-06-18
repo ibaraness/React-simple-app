@@ -9,6 +9,7 @@ import Header from './components/shared/Header';
 import HomepageContainer from './containers/HomepageContainer';
 import SpinnerContainer from './containers/SpinnerContainer';
 import StoryPageContainer from './containers/StoryPageContainer';
+import GeneralModalConatiner from './containers/GeneralModalContainer';
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
           <Route exact path="/" component={HomepageContainer} />
           <Route path="/story/:id" component={StoryPageContainer} />  
           <SpinnerContainer />
+          <GeneralModalConatiner />
         </div>
       </Router>
     );

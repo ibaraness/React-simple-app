@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Story from './../../../shared/segments/Story';
 import './main-stories.css';
-import Maybe from './../../../../utils/fp/Maybe'
-import R from 'ramda';
 
 class MainStories extends Component {
 

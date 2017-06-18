@@ -4,6 +4,7 @@ import { homepageProducts } from './products';
 import { spinner } from './spinner';
 import { teaser } from './teaser';
 import { homepage } from './homepage';
+import { modals } from './modals';
 import { combineReducers } from 'redux';
 
 const rootReducer = combineReducers({
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   homepage,
   homepageProducts,
   teaser,
-  otherStories
+  otherStories,
+  modals
 });
 
 export default rootReducer;

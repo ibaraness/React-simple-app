@@ -48,6 +48,12 @@ export const FETCH_TEASER_SUCCESS = 'FETCH_TEASER_SUCCESS';
 export const FETCH_TEASER_FAILURE = 'FETCH_TEASER_FAILURE';
 
 /**
- * Homepage loaded
+ * Homepage loaded flag action type
  */
 export const HOMEPAGE_LOADED = 'HOMEPAGE_LOADED';
+
+/**
+ * General modal state action types
+ */
+export const GENERAL_MODAL_OPEN = 'GENERAL_MODAL_OPEN';
+export const GENERAL_MODAL_CLOSE = 'GENERAL_MODAL_CLOSE';

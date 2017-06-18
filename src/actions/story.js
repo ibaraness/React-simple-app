@@ -13,7 +13,6 @@ import {
     FETCH_RELATED_STORIES,
     FETCH_RELATED_STORIES_SUCCESS,
  } from './action-types'
-import Maybe from './../utils/fp/Maybe'
 import R from 'ramda';
 
 
@@ -137,7 +136,6 @@ export const fetchMainStoriesFailure = (error) =>{
  */
 export const prefetchMainStoriesSuccess = (mainStoriesIds) => { 
     return (dispatch, getState) => {
-        console.log("state", getState());
         loadStoriesData(fetchMainStoriesSuccess, dispatch, mainStoriesIds)
     }
 }
@@ -169,7 +167,6 @@ export const fetchOtherStoriesFailure = (error) => {
 
 export const prefetchOtherStoriesSuccess = (data) => {
     return (dispatch, getState) => {
-        console.log("state", getState());
         loadStoriesData(fetchOtherStoriesSuccess, dispatch, data, getState)
     }
 }

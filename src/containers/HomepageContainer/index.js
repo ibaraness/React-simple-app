@@ -1,19 +1,19 @@
 import { connect } from 'react-redux';
 import {
-    //fetchStory, 
-    //fetchStorySuccess, 
     fetchMainStories,
     prefetchMainStoriesSuccess, 
-    //fetchMainStoriesSuccess,
     fetchOtherStories,
     prefetchOtherStoriesSuccess, 
 } from './../../actions/story';
 import { homepageLoaded } from './../../actions/homepage';
 import { show_spinner, hide_spinner } from './../../actions/spinner';
 import { fetch_homepage_products,fetch_homepage_products_success } from './../../actions/product';
-import { fetch_teaser, fetch_teaser_success, prefetch_teaser_success } from './../../actions/teaser';
+import { fetch_teaser, prefetch_teaser_success } from './../../actions/teaser';
 import { FETCH_MAIN_STORIES, FETCH_OTHER_STORIES, FETCH_HOMEPAGE_PRODUCTS, FETCH_TEASER } from './../../actions/action-types';
+import { openGeneralModal } from './../../actions/modals';
+
 import Homepage from './../../components/pages/Homepage';
+
 import Maybe from './../../utils/fp/Maybe'
 import R from 'ramda';
 
@@ -46,6 +46,9 @@ const actionTypesToActions = {
  */
 const mapDispatchToProps = dispatch => {
     return {
+        openModal: () => {
+            dispatch(openGeneralModal());
+        },
         /**
          * Load all homepage data - Wait until all data finished loading using Promise.all
          */
