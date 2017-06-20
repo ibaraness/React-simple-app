@@ -7,7 +7,18 @@ export const openGeneralModal = () => {
         payload:{
             title:'General Modal',
             content:'General modal content',
-            modalType: ERROR_MODAL //default
+            modalType: GENERAL_MODAL //default
+        }
+    }
+}
+
+export const openErrorModal = (title, content) => {
+    return {
+        type: GENERAL_MODAL_OPEN,
+        payload: {
+            title,
+            content,
+            modalType:ERROR_MODAL
         }
     }
 }

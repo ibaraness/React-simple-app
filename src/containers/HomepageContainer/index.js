@@ -10,7 +10,7 @@ import { show_spinner, hide_spinner } from './../../actions/spinner';
 import { fetch_homepage_products,fetch_homepage_products_success } from './../../actions/product';
 import { fetch_teaser, prefetch_teaser_success } from './../../actions/teaser';
 import { FETCH_MAIN_STORIES, FETCH_OTHER_STORIES, FETCH_HOMEPAGE_PRODUCTS, FETCH_TEASER } from './../../actions/action-types';
-import { openGeneralModal } from './../../actions/modals';
+import { openGeneralModal, openErrorModal } from './../../actions/modals';
 
 import Homepage from './../../components/pages/Homepage';
 
@@ -82,14 +82,22 @@ const mapDispatchToProps = dispatch => {
                              * Handle action error
                              */
                             if(actionCreator.error){
-                                //TODO: Replace with dispatching error modal action
-                                console.log("No action creator was found for " + actionType);
+                                /**
+                                 * Create a user friendly error message
+                                 */
+                                const errorMessage = "<h4>Script error!</h4> <br/> No action creator was found for " + actionType + " action type";
+                                dispatch(openErrorModal("ERROR!", errorMessage));
                             /**
                              * Handle server error
                              */
                             }else if(error){
                                 //TODO: Replace with dispatching server error action
                                 console.log("Server error loading " + actionType);
+                                /**
+                                 * Create a user friendly error message
+                                 */
+                                const errorMessage = "<h4>Server error!</h4> <br/> Can't load  " + actionType;
+                                dispatch(openErrorModal("ERROR!", errorMessage));
                             }else if(payload){
                                 dispatch(actionCreator(payload));
                             }

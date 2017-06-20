@@ -18,10 +18,10 @@ class GeneralModal extends Component {
     render(){
         const modalState = this.props.modals['show'] || false;
         const { title, content, modalType } = this.props.modals['data'];
-        const modalTypeClass = getModalTypeClass(modalType);
+        const modalTypeClass = "modal-header " + getModalTypeClass(modalType);
         return(
             <Modal show={modalState} onHide={this.close}>
-                <Modal.Header bsClass={"modal-header" + " " + modalTypeClass} closeButton>
+                <Modal.Header bsClass={modalTypeClass} closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

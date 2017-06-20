@@ -13,25 +13,33 @@ class StoryPage extends Component {
 
     componentWillMount(){
         /**
-         * Partially aplication function to check if story was loaded,
+         * Partiall aplication function to check if story was loaded,
          * We pass only 'stories' parameter at first.
          */
-        const storyLoadedPA = storyLoaded(this.props.stories);
+        const mainStoryLoaded = R.partial((stories, id) => stories.find(s => +s.id === +id), [this.props.stories]); 
 
         /**
          * Create a Maybe monad to check if ID was passed
          */
         this.storyID =  Maybe.of(this.props).map(R.path(['match','params','id']));
-        
+
+        /**
+         * Partial application function to load the main story in case it's not loaded
+         */
+        const getStoryIfNotExist = R.partial((id, getStory, story)=>{
+            if(!story && getStory){
+                getStory(id);
+            }
+            return story;
+        }, [this.storyID.join(), this.props.getStory]);
+
         /**
          * Check if story was loaded to state
          */
-        this.storyID.map(storyLoadedPA)
-        .orElse(this.storyID.map(this.props.getStory));
-
+        this.storyID.map(mainStoryLoaded)
+        .orElse(false).map(getStoryIfNotExist);
+        
         this.props.getRelatedStories(this.storyID.join())
-        
-        
     }
     componentWillReceiveProps(nextProps){
         /**

@@ -1,4 +1,3 @@
-
 import { connect } from 'react-redux';
 import { 
     fetchStory, 
@@ -9,6 +8,7 @@ import {
 import StoryPage from './../../components/pages/StoryPage';
 import { promiseInterceptor } from './../../utils/promise-interceptor';
 import Maybe from './../../utils/fp/Maybe';
+import { openErrorModal } from './../../actions/modals';
 
 /**
  * Prepare all homepage data before showing the page
@@ -32,6 +32,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getStory: id => {
+            console.log("Fetching story!");
             /**
              * Wrapping our Promise action with our promiseInterceptor function allow
              * us to show and hide a loader
@@ -46,7 +47,7 @@ const mapDispatchToProps = dispatch => {
                  * Check that story was successfully loaded (...or unsuccessfully)
                  */
                 Maybe.of(response.error).map(err => {
-                    console.log("Showing error message", err)
+                    dispatch(openErrorModal("Error", "Story was not found!"))
                     return err;
                 })
                 /**
