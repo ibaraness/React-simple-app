@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {getModalTypeClass} from './../../../utils/modals/modalTypeCssClass';
 import './general-modal.css';
 
 class GeneralModal extends Component {
@@ -17,10 +18,10 @@ class GeneralModal extends Component {
     render(){
         const modalState = this.props.modals['show'] || false;
         const { title, content, modalType } = this.props.modals['data'];
-
+        const modalTypeClass = getModalTypeClass(modalType);
         return(
             <Modal show={modalState} onHide={this.close}>
-                <Modal.Header bsClass="modal-header" closeButton>
+                <Modal.Header bsClass={"modal-header" + " " + modalTypeClass} closeButton>
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
